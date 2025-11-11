@@ -15,7 +15,7 @@ db_url = f"sqlite:///{db_path}"
 
 agno_agent = Agent(
     name="Match Making Agent",
-    model=Gemini(id="gemini-2.5-flash", api_key="AIzaSyAXjF-m9PoKWJ34zekGFBC4zcCueWB-Alo"),
+    model=Gemini(id="gemini-2.5-flash", api_key=""),
     tools=[SequentialThinkingTools(), SQLTools(db_url=db_url)],
     add_history_to_context=True,
     markdown=True,
