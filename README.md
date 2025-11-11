@@ -23,7 +23,6 @@ MatchingAgent/
 ├── utils/prompts.py              # System prompt describing workflow & guardrails
 ├── main.py                       # Entry point that runs the agent and saves markdown output
 ├── markdown/                     # Generated agent reports
-├── project_overview.md           # High-level end-to-end summary
 └── README.md                     # This file
 ```
 
