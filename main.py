@@ -10,7 +10,7 @@ from utils.prompts import PROMPT_MAIN
 from agno.os import AgentOS
 
 
-def handle_greeting(user_input: str) -> str:
+def handle_greeting(user_input: str) -> str | None:
     """
     Handle simple greetings and return a friendly welcome message.
     
@@ -18,12 +18,19 @@ def handle_greeting(user_input: str) -> str:
         user_input: The user's input string
         
     Returns:
-        A welcome message if greeting detected, None otherwise
+        A welcome message string if greeting detected, None otherwise
     """
     greetings = ["hi", "hello", "hey", "greetings", "good morning", "good afternoon", "good evening"]
     user_lower = user_input.lower().strip()
     
-    if user_lower in greetings or any(user_lower.startswith(g + " ") or user_lower.startswith(g + ",") for g in greetings):
+    # Check if input is exactly a greeting or starts with a greeting
+    is_greeting = (
+        user_lower in greetings or
+        any(user_lower.startswith(greeting + " ") for greeting in greetings) or
+        any(user_lower.startswith(greeting + ",") for greeting in greetings)
+    )
+    
+    if is_greeting:
         return """# Welcome to the Matchmaking Agent!
 
 I'm here to help you pair SEC Form D / Reg CF deals with Form ADV advisers using our comprehensive database.
