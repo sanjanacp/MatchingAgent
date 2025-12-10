@@ -44,9 +44,10 @@ Detailed ETL notes live in `markdown/project_overview.md`, while `markdown/view_
 - See `markdown/view_scoring_details.md` for the full breakdown.
 
 ## Agent Workflow
-1. **System prompt** (`utils/prompts.py`): enforces plan-first tool usage, schema inspection, SQL-only answers, and markdown outputs containing identifiers, geography, RAUM, component scores, and contact info.
-2. **Tools**: the Agno agent loads two tools—`SequentialThinkingTools` (custom planner) and `SQLTools` (runs queries against `data/staging.sqlite`).
-3. **Run**: edit `USER_INPUT` in `main.py` or wrap the agent in your own CLI/web interface; when executed, it stores responses under `markdown/output_<timestamp>.md`.
+1. **Greeting Handler**: The agent now includes a friendly greeting handler that responds to simple greetings (hi, hello, hey, etc.) with a welcome message and usage guide, making it more user-friendly for first-time interactions.
+2. **System prompt** (`utils/prompts.py`): enforces plan-first tool usage, schema inspection, SQL-only answers, and markdown outputs containing identifiers, geography, RAUM, component scores, and contact info.
+3. **Tools**: the Agno agent loads two tools—`SequentialThinkingTools` (custom planner) and `SQLTools` (runs queries against `data/staging.sqlite`).
+4. **Run**: edit `USER_INPUT` in `main.py` or wrap the agent in your own CLI/web interface; when executed, it stores responses under `markdown/output_<timestamp>.md`.
 
 ## Getting Started
 1. Install dependencies (example):

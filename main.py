@@ -10,6 +10,48 @@ from utils.prompts import PROMPT_MAIN
 from agno.os import AgentOS
 
 
+def handle_greeting(user_input: str) -> str | None:
+    """
+    Handle simple greetings and return a friendly welcome message.
+    
+    Args:
+        user_input: The user's input string
+        
+    Returns:
+        A welcome message string if greeting detected, None otherwise
+    """
+    greetings = ["hi", "hello", "hey", "greetings", "good morning", "good afternoon", "good evening"]
+    user_lower = user_input.lower().strip()
+    
+    # Check if input is exactly a greeting or starts with a greeting
+    is_greeting = (
+        user_lower in greetings or
+        any(user_lower.startswith(greeting + " ") for greeting in greetings) or
+        any(user_lower.startswith(greeting + ",") for greeting in greetings)
+    )
+    
+    if is_greeting:
+        return """# Welcome to the Matchmaking Agent!
+
+I'm here to help you pair SEC Form D / Reg CF deals with Form ADV advisers using our comprehensive database.
+
+## What I Can Do
+
+- **Find advisers for a deal**: Provide a Form D accession number, and I'll find the top matching advisers
+- **Find deals for an adviser**: Provide an adviser FilingID, and I'll show suitable deals
+- **Analyze fit scores**: I'll explain why advisers match specific deals based on geography, capital, audience, and more
+- **Query the database**: Ask about specific deals, advisers, or market trends
+
+## Example Queries
+
+- "Find the top 5 advisers for Form D accession 0000005108-25-000002"
+- "Show deals that adviser FilingID 1620806 is a fit for"
+- "List Reg CF offerings that allow retail investors"
+
+How can I assist you today?"""
+    return None
+
+
 db_path = Path("data/staging.sqlite").resolve()
 db_url = f"sqlite:///{db_path}"
 
@@ -37,7 +79,18 @@ Return adviser_id, adviser_name, adviser_city, adviser_state, total_raum, compos
 plus the geography/capital/audience component scores. 
 Explain briefly why each adviser is a good fit.
 """
-    res = agno_agent.run(USER_INPUT)
+    
+    # Check if input is a simple greeting
+    greeting_response = handle_greeting(USER_INPUT)
+    
+    if greeting_response:
+        # Handle greeting without invoking the agent
+        print(greeting_response)
+        res_content = greeting_response
+    else:
+        # Run the agent for actual queries
+        res = agno_agent.run(USER_INPUT)
+        res_content = res.content
 
     markdown_dir = Path("markdown")
     os.makedirs(markdown_dir, exist_ok=True)
@@ -45,5 +98,5 @@ Explain briefly why each adviser is a good fit.
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_path = markdown_dir / f"output_{timestamp}.md"
     with open(output_path, "w", encoding="utf-8") as md_file:
-        md_file.write(res.content)
+        md_file.write(res_content)
   
